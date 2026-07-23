@@ -1,0 +1,3 @@
+Day 0 - 22/07
+Started the project - my aim is to learn the latest in full stack development 1st, then later get hands-om with integrating an AI agent into the app. By the end of it, I want to polish my full stack development skills as well as learn AI fundamentals beyong using LLMs for coding. I will be working on this project emulating an engineering team, hence moving step by step, defining documents along the way.
+Chalked out a basic vision document for the project, defining things like what this app does, who is it for, why am I building it, score of version 1, what does success look like for version 1.
