@@ -59,6 +59,7 @@ For e.g.:
 If a job manager gets a job creation request from the API, it will check if the company already exists, if not then create one. is the date given, if not, calculate one. Once all this is done, then only send the create request to the API.
 
 Note to self: There are technical aspects that I'm unsure about, for e.g. which SQL stack to use. Rather than filling something popular and common, I've left these decisions as undecided for now, to be attended to after I have more information.
+
 ![Architecture](./Architecture%20and%20Sample%20Flow.png)
 
 ## Day 3.1
@@ -81,3 +82,17 @@ Now, we can make similar decisions for all the data fields of a Job:
  - Location: Optional
  - Status: Required - Defaults to "Applied", can be changed by User later
 
+ ## Day 3.2
+ ### Designing a Job Object
+
+**Don't model things before they don't exist.** While it may be tempting to make a Company class that stores information of the company website, recruiter, contacts etc., currently, in V1, we are only using the name, and nothing else from that object will help our users. it is unneeded abstraction.   
+
+```python
+class Job{
+    Company: str,
+    Job_Title: str,
+    Date_Applied: DateTime(),
+    Location: str,
+    Status: str
+}
+```
