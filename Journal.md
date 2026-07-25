@@ -61,3 +61,23 @@ If a job manager gets a job creation request from the API, it will check if the 
 Note to self: There are technical aspects that I'm unsure about, for e.g. which SQL stack to use. Rather than filling something popular and common, I've left these decisions as undecided for now, to be attended to after I have more information.
 ![Architecture](./Architecture%20and%20Sample%20Flow.png)
 
+## Day 3.1
+Defining what `create_job()` does, needs us to first define what a job is. Or rather, what it means for us.
+Defining a minimum definition for what needs to be included in a job. When I create a new job, what information would I want to the form to have? 
+- Company
+- Job Title
+- Location
+- Date Applied
+- Status (Applied, rejected etc.)
+
+### Validating the data according to product design philosophy
+A JSON like `{company: 12345}` can be automatically rejected by the client using data type validation. But what if a request comes with `{company: ""}`. Do we want our DB to have job applications stored with no company names? It is obvious that this might as well be garbage data and the DB should require a company name. But thinking of it from a product perspective:
+From a user's perspective, I believe seeing job applications with no company names will leave them confused. A user might waste time trying to track down this job application and find its Company by cross-referencing the date applied with their emails. or do a search for that particular job title in their emails. This is time that can be saved by enforcing that `{company: ""}` is invalid. **This is a business rule.**
+
+Now, we can make similar decisions for all the data fields of a Job:
+ - Company: Required
+ - Job Title: Optional
+ - Date Applied: Required - System Generated
+ - Location: Optional
+ - Status: Required - Defaults to "Applied", can be changed by User later
+
