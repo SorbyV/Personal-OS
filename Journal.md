@@ -89,10 +89,39 @@ Now, we can make similar decisions for all the data fields of a Job:
 
 ```python
 class Job{
-    Company: str,
-    Job_Title: str,
-    Date_Applied: DateTime(),
-    Location: str,
-    Status: str
+    id: int,
+    created_at: str,
+    updated_at: str,
+    company: str,
+    job_title: str,
+    date_applied: datetime,
+    location: str,
+    status: str,
+    notes: str
 }
 ```
+
+# Day 4
+## Designing the Codebase
+ Feature based or layer based. Layer based - `API/, Manager/jobmanager/, /repos/jobrepo/` Feature based: `jobs/api.py, jobs/repo.py, jobs/manager.py`
+Currently, and I feel for agile environments, it will become difficult to work in layer based environments wrt to a project like this. Imagine wanting to make an update to the Journal flow. it will need changes in multiple folders for each part of the architecture. in feature-based, our changes are contained to the `Journal/` folder. ofc, if we deem it that some parts of the utility code is known to be common, taht can be kept in a common folder. eg. auth. But **"Duplication is cheaper than the wrong abstraction."**. if we are unsure about the future versions, rather than predicting and making a messy utils.py, it would be better to copy paste 50 lines of code twice.
+
+### Can DB call api.py directly on successful job creation. 
+Why does it have to go from DB to repo to manager to api. Well because we defined the responsibvilities that way. we said that we are separating responsibilities so a repo doesnt need to know about HTTP or the DB doesnt need to know abt the Job class. calling api.py from DB is possible but it would violate that separation principle. 
+
+## Where do we define our classes
+it becomes important to define the Job class "somewhere" in our codebase. All the current files have fixed responsibilities: api.py, manager.py, repo.py... a job.py file is needed whose "job" (hehe) it is to define what a job is. i.e. the class definition. 
+note that the job_save() function (or something similar) should not exist within job.py. that is what the manager.py is for. **API- data transmission, SQL-data storage, class Job()- how our application understands a job.**
+
+Project Structure:
+```
+ - jobs/
+    - api.py
+    - manager.py
+    - repo.py
+    - job.py
+ - tasks/
+ - journal/
+```
+
+
