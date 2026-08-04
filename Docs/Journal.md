@@ -101,7 +101,7 @@ class Job{
 }
 ```
 
-# Day 4
+# Day 4 26/07
 ## Designing the Codebase
  Feature based or layer based. Layer based - `API/, Manager/jobmanager/, /repos/jobrepo/` Feature based: `jobs/api.py, jobs/repo.py, jobs/manager.py`
 Currently, and I feel for agile environments, it will become difficult to work in layer based environments wrt to a project like this. Imagine wanting to make an update to the Journal flow. it will need changes in multiple folders for each part of the architecture. in feature-based, our changes are contained to the `Journal/` folder. ofc, if we deem it that some parts of the utility code is known to be common, taht can be kept in a common folder. eg. auth. But **"Duplication is cheaper than the wrong abstraction."**. if we are unsure about the future versions, rather than predicting and making a messy utils.py, it would be better to copy paste 50 lines of code twice.
@@ -123,5 +123,24 @@ Project Structure:
  - tasks/
  - journal/
 ```
+ # Day 5-12 27/07-03/08
+ Learning React and FastAPI basics
 
-
+ # Day 13 04/08 
+ Moving to task based work from today as I want to start implementing the things Ive covered in online tutorials and documentation in the last week.
+ - Task 1: Run a FastAPI server locally and check if backend is running using the endpoint `/health`
+ - Task 2: Structure backend to ensure maintanability and scalability - **API Routers** - Think of it as rather than having multiple endpoints like `get user` or `get job` in a single `main.py` file, we create 2 different files, `user.py` and `job.py`, write api functionality in those files for their respective endpoints, and then plug that back into main.py. This way, code for users and jobs stays seperate from each other, and `main.py` remains uncluttered. Very useful. 
+ My implementation:
+```python
+# main.py:
+import jobs.api as jobs_api
+app = FastAPI()
+app.include_router(jobs_api.router)
+```
+```python
+# jobs/api.py
+router = APIRouter(prefix="/job", tags=["job"])
+@router.get("/")
+async def root():
+    return {"message":"Welcome to the jobs section!"}
+```
