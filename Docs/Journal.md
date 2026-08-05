@@ -73,7 +73,7 @@ Defining a minimum definition for what needs to be included in a job. When I cre
 
 ### Validating the data according to product design philosophy
 A JSON like `{company: 12345}` can be automatically rejected by the client using data type validation. But what if a request comes with `{company: ""}`. Do we want our DB to have job applications stored with no company names? It is obvious that this might as well be garbage data and the DB should require a company name. But thinking of it from a product perspective:
-From a user's perspective, I believe seeing job applications with no company names will leave them confused. A user might waste time trying to track down this job application and find its Company by cross-referencing the date applied with their emails. or do a search for that particular job title in their emails. This is time that can be saved by enforcing that `{company: ""}` is invalid. **This is a business rule.**
+From a user's perspective, I believe seeing job applications with no company names will leave them confused. A user might waste time trying to track down this job application and find its Company by cross-referencing the date applied with their emails. or do a search for that particular job title in their emails. This is time that can be saved by enforcing that `{company: ""}` is invalid. **This is an example of a business rule.**
 
 Now, we can make similar decisions for all the data fields of a Job:
  - Company: Required
@@ -88,20 +88,19 @@ Now, we can make similar decisions for all the data fields of a Job:
 **Don't model things before they don't exist.** While it may be tempting to make a Company class that stores information of the company website, recruiter, contacts etc., currently, in V1, we are only using the name, and nothing else from that object will help our users. it is unneeded abstraction.   
 
 ```python
-class Job{
-    id: int,
-    created_at: str,
-    updated_at: str,
-    company: str,
-    job_title: str,
-    date_applied: datetime,
-    location: str,
-    status: str,
+class Job:
+    id: int
+    created_at: str
+    updated_at: str
+    company: str
+    job_title: str
+    date_applied: datetime
+    location: str
+    status: str
     notes: str
-}
 ```
 
-# Day 4 26/07
+# Day 4 - 26/07
 ## Designing the Codebase
  Feature based or layer based. Layer based - `API/, Manager/jobmanager/, /repos/jobrepo/` Feature based: `jobs/api.py, jobs/repo.py, jobs/manager.py`
 Currently, and I feel for agile environments, it will become difficult to work in layer based environments wrt to a project like this. Imagine wanting to make an update to the Journal flow. it will need changes in multiple folders for each part of the architecture. in feature-based, our changes are contained to the `Journal/` folder. ofc, if we deem it that some parts of the utility code is known to be common, taht can be kept in a common folder. eg. auth. But **"Duplication is cheaper than the wrong abstraction."**. if we are unsure about the future versions, rather than predicting and making a messy utils.py, it would be better to copy paste 50 lines of code twice.
@@ -123,10 +122,10 @@ Project Structure:
  - tasks/
  - journal/
 ```
- # Day 5-12 27/07-03/08
+ # Day 5-12 - 27/07-03/08
  Learning React and FastAPI basics
 
- # Day 13 04/08 
+ # Day 13 - 04/08 
  Moving to task based work from today as I want to start implementing the things Ive covered in online tutorials and documentation in the last week.
  - Task 1: Run a FastAPI server locally and check if backend is running using the endpoint `/health`
  - Task 2: Structure backend to ensure maintanability and scalability - **API Routers** - Think of it as rather than having multiple endpoints like `get user` or `get job` in a single `main.py` file, we create 2 different files, `user.py` and `job.py`, write api functionality in those files for their respective endpoints, and then plug that back into main.py. This way, code for users and jobs stays seperate from each other, and `main.py` remains uncluttered. Very useful. 
@@ -144,3 +143,11 @@ router = APIRouter(prefix="/job", tags=["job"])
 async def root():
     return {"message":"Welcome to the jobs section!"}
 ```
+
+ # Day 14 - 05/08
+ ## Defining public interface for `jobs/manager.py`
+ I want to think of the Manager in terms of the business capabilities that it offers. 
+ **The Job Manager is the orchestration layer for all business operations involving Jobs. It enforces business rules, coordinates the creation and retrieval of Job objects, delegates persistence to the repository, and exposes business capabilities to the rest of the application.**
+
+ Wrote code to have a sample job POST request flow from api to job_manager. do a check for simple business rules and then return the successful object or a failure message. 
+ To-Do: add a path parameter check at api, start getting this info from a webpage rather than creating sample info?
